@@ -9,20 +9,22 @@ Product {
     property string model: "STM32F4DISCOVERY"
     property string toolchain: "GCC_ARM"
     property string cortex: "M4"
+    cpp.defines: ["TOOLCHAIN_GCC_CW=1"]
     cpp.positionIndependentCode: false
     cpp.debugInformation: true
     cpp.commonCompilerFlags: [
-    	"-mthumb","-mcpu=cortex-m4","-mfloat-abi=hard","-mfpu=fpv4-sp-d16",
-      "-fdata-sections","-ffunction-sections","-fno-inline","-std=c99"]
+        "-mthumb","-mcpu=cortex-m4","-mfloat-abi=hard","-mfpu=fpv4-sp-d16",
+      "-fdata-sections","-ffunction-sections","-fno-inline","-std=c99","-flto"]
     cpp.linkerFlags:[
-        "-mthumb","-mcpu=cortex-m4","-mfloat-abi=hard","-mfpu=fpv4-sp-d16","--specs=nano.specs",
-        "-Wl,--gc-sections","-T",path+"/"+mbed+"targets/cmsis/TARGET_"+vendor+"/TARGET_"+model+"/TOOLCHAIN_"+toolchain+"/STM32F407.ld","-lgcc","-lc"]
+        "-flto","-mthumb","-mcpu=cortex-m4","-mfloat-abi=hard","-mfpu=fpv4-sp-d16","--specs=nano.specs","-Wl,--start-group",
+        "-Wl,--gc-sections","-T",path+"/"+mbed+"targets/cmsis/TARGET_"+vendor+"/TARGET_"+model+"/TOOLCHAIN_"+toolchain+"/STM32F407.ld","-lnosys","-lgcc","-lc"]
     cpp.includePaths: [
     	mbed+"api",
     	mbed+"hal",
       mbed+"targets/cmsis/",
       mbed+"targets/cmsis/TARGET_"+vendor+"/TARGET_"+model+"/",
-      mbed+"targets/hal/TARGET_"+vendor+"/TARGET_"+model+"/"
+      mbed+"targets/hal/TARGET_"+vendor+"/TARGET_"+model+"/",
+      mbed+"devices/lis302/"
     ]
     files: [
     	mbed+"api/*.h",
@@ -34,6 +36,7 @@ Product {
     	mbed+"targets/cmsis/TARGET_"+vendor+"/TARGET_"+model+"/TOOLCHAIN_"+toolchain+"/*",
     	mbed+"targets/cmsis/target/*.h",
     	mbed+"targets/hal/TARGET_"+vendor+"/TARGET_"+model+"/*",
+      mbed+"devices/lis302/*",
       "main.cpp"
     ]
     Properties {
