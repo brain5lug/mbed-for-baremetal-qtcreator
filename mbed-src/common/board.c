@@ -16,21 +16,21 @@
 #include "gpio_api.h"
 #include "wait_api.h"
 #include "toolchain.h"
+#include "mbed_interface.h"
 
-WEAK void mbed_die(void);
 WEAK void mbed_die(void) {
+#if !defined (NRF51_H) && !defined(TARGET_EFM32)
 	__disable_irq();	// dont allow interrupts to disturb the flash pattern
-	
-#if   (DEVICE_ERROR_RED == 1)
-    gpio_t led_red; gpio_init(&led_red, LED_RED, PIN_OUTPUT);
-
-#elif (DEVICE_ERROR_PATTERN == 1)
-    gpio_t led_1; gpio_init(&led_1, LED1, PIN_OUTPUT);
-    gpio_t led_2; gpio_init(&led_2, LED2, PIN_OUTPUT);
-    gpio_t led_3; gpio_init(&led_3, LED3, PIN_OUTPUT);
-    gpio_t led_4; gpio_init(&led_4, LED4, PIN_OUTPUT);
 #endif
-    
+#if   (DEVICE_ERROR_RED == 1)
+    gpio_t led_red; gpio_init_out(&led_red, LED_RED);
+#elif (DEVICE_ERROR_PATTERN == 1)
+    gpio_t led_1; gpio_init_out(&led_1, LED1);
+    gpio_t led_2; gpio_init_out(&led_2, LED2);
+    gpio_t led_3; gpio_init_out(&led_3, LED3);
+    gpio_t led_4; gpio_init_out(&led_4, LED4);
+#endif
+
     while (1) {
 #if   (DEVICE_ERROR_RED == 1)
         gpio_write(&led_red, 1);
@@ -41,7 +41,7 @@ WEAK void mbed_die(void) {
         gpio_write(&led_3, 0);
         gpio_write(&led_4, 1);
 #endif
-        
+
         wait_ms(150);
 
 #if   (DEVICE_ERROR_RED == 1)
@@ -53,7 +53,7 @@ WEAK void mbed_die(void) {
         gpio_write(&led_3, 1);
         gpio_write(&led_4, 0);
 #endif
-        
+
         wait_ms(150);
     }
 }

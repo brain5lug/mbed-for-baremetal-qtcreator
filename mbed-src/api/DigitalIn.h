@@ -49,12 +49,19 @@ public:
     /** Create a DigitalIn connected to the specified pin
      *
      *  @param pin DigitalIn pin to connect to
-     *  @param name (optional) A string to identify the object
      */
-    DigitalIn(PinName pin) {
-        gpio_init(&gpio, pin, PIN_INPUT);
+    DigitalIn(PinName pin) : gpio() {
+        gpio_init_in(&gpio, pin);
     }
 
+    /** Create a DigitalIn connected to the specified pin
+     *
+     *  @param pin DigitalIn pin to connect to
+     *  @param mode the initial mode of the pin
+     */
+    DigitalIn(PinName pin, PinMode mode) : gpio() {
+        gpio_init_in_ex(&gpio, pin, mode);
+    }
     /** Read the input, represented as 0 or 1 (int)
      *
      *  @returns
@@ -71,6 +78,16 @@ public:
      */
     void mode(PinMode pull) {
         gpio_mode(&gpio, pull);
+    }
+
+    /** Return the output setting, represented as 0 or 1 (int)
+     *
+     *  @returns
+     *    Non zero value if pin is connected to uc GPIO
+     *    0 if gpio object was initialized with NC
+     */
+    int is_connected() {
+        return gpio_is_connected(&gpio);
     }
 
 #ifdef MBED_OPERATORS

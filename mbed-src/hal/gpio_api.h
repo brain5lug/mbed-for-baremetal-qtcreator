@@ -28,14 +28,27 @@ extern "C" {
  **/
 uint32_t gpio_set(PinName pin);
 
+/* Checks if gpio object is connected (pin was not initialized with NC)
+ * @param pin The pin to be set as GPIO
+ * @return 0 if port is initialized with NC
+ **/
+int gpio_is_connected(const gpio_t *obj);
+
 /* GPIO object */
-void gpio_init (gpio_t *obj, PinName pin, PinDirection direction);
+void gpio_init(gpio_t *obj, PinName pin);
 
 void gpio_mode (gpio_t *obj, PinMode mode);
 void gpio_dir  (gpio_t *obj, PinDirection direction);
 
 void gpio_write(gpio_t *obj, int value);
 int  gpio_read (gpio_t *obj);
+
+// the following set of functions are generic and are implemented in the common gpio.c file
+void gpio_init_in(gpio_t* gpio, PinName pin);
+void gpio_init_in_ex(gpio_t* gpio, PinName pin, PinMode mode);
+void gpio_init_out(gpio_t* gpio, PinName pin);
+void gpio_init_out_ex(gpio_t* gpio, PinName pin, int value);
+void gpio_init_inout(gpio_t* gpio, PinName pin, PinDirection direction, PinMode mode, int value);
 
 #ifdef __cplusplus
 }

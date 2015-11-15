@@ -45,8 +45,17 @@ public:
      *
      *  @param pin DigitalOut pin to connect to
      */
-    DigitalOut(PinName pin) {
-        gpio_init(&gpio, pin, PIN_OUTPUT);
+    DigitalOut(PinName pin) : gpio() {
+        gpio_init_out(&gpio, pin);
+    }
+
+    /** Create a DigitalOut connected to the specified pin
+     *
+     *  @param pin DigitalOut pin to connect to
+     *  @param value the initial pin value
+     */
+    DigitalOut(PinName pin, int value) : gpio() {
+        gpio_init_out_ex(&gpio, pin, value);
     }
 
     /** Set the output, specified as 0 or 1 (int)
@@ -66,6 +75,16 @@ public:
      */
     int read() {
         return gpio_read(&gpio);
+    }
+
+    /** Return the output setting, represented as 0 or 1 (int)
+     *
+     *  @returns
+     *    Non zero value if pin is connected to uc GPIO
+     *    0 if gpio object was initialized with NC
+     */
+    int is_connected() {
+        return gpio_is_connected(&gpio);
     }
 
 #ifdef MBED_OPERATORS

@@ -10,8 +10,44 @@
  * MEMS_INT2 PE_1 */
 
 DigitalOut myled(LED1);
+DigitalOut myled2(LED4);
 SPI _spi(PA_7,PA_6,PA_5);
 DigitalOut _cs(PE_3);
+
+extern "C" void __cxa_pure_virtual(void)
+{
+// call to a pure virtual function happened ... wow, should never happen ... stop
+while(1)
+;
+}
+
+void operator delete(void *)
+{
+// should never get here ... we don't use new
+while(1)
+;
+}
+
+void operator delete[](void *)
+{
+// should never get here ... we don't use new
+while(1)
+;
+}
+
+void* operator new(size_t)
+{
+// should never get here ... we don't use new
+while(1)
+;
+}
+
+void* operator new[](size_t)
+{
+// should never get here ... we don't use new
+while(1)
+;
+}
 
 int main() {
    int val=0;
@@ -33,9 +69,11 @@ int main() {
    val = _spi.write(0x00);
 
 	while(1) {
+                myled2 = 0;
 		myled = 1;
-		wait(0.2);
+                wait(0.2);
 		myled = 0;
-		wait(0.2);
+                myled2 = 1;
+                wait(0.2);
 	}
 }
